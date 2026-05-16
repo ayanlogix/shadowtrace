@@ -62,6 +62,7 @@ function startBootSequence(walletName) {
     bootSequence.classList.remove('hidden');
     
     connectedWalletText.innerText = `${walletName.toUpperCase()}: 0x8F2...9A1`;
+    localStorage.setItem('shadowtrace_wallet', walletName);
 
     setTimeout(() => { bootText.innerText = `AUTHENTICATING_SIGNATURE...`; bootProgress.style.width = "40%"; }, 400);
     setTimeout(() => { bootText.innerText = "SYNCING_STATE..."; bootProgress.style.width = "80%"; }, 900);
@@ -78,6 +79,7 @@ function startBootSequence(walletName) {
 }
 
 function disconnectWallet() {
+    localStorage.removeItem('shadowtrace_wallet');
     // Show Toast
     showToast('Wallet disconnected securely.', 'info');
     
@@ -148,15 +150,19 @@ function runNetworkDiagnostics() {
 }
 
 // --- TAB SWITCHING ---
-function switchTab(tabId) {
+function switchTab(tabId, element = null) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
     const selectedTab = document.getElementById(`tab-${tabId}`);
     if (selectedTab) selectedTab.classList.remove('hidden');
 
-    const navItem = document.querySelector(`.nav-item[onclick*="${tabId}"]`);
-    if (navItem) navItem.classList.add('active');
+    if (element) {
+        element.classList.add('active');
+    } else {
+        const navItem = document.querySelector(`.nav-item[onclick*="'${tabId}'"]`);
+        if (navItem) navItem.classList.add('active');
+    }
 
     currentTabName.innerText = tabId.toUpperCase();
 }
@@ -311,3 +317,15 @@ function revokeProof(itemId) {
         }, 300);
     }, 1500);
 }
+
+// --- PERSISTENT LOGIN ---
+window.addEventListener('DOMContentLoaded', () => {
+    const savedWallet = localStorage.getItem('shadowtrace_wallet');
+    if (savedWallet) {
+        loginScreen.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+        connectedWalletText.innerText = `${savedWallet.toUpperCase()}: 0x8F2...9A1`;
+        startBlockTicker();
+        typeToConsole(`Session restored. Welcome back.`);
+    }
+});
