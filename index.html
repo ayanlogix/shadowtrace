@@ -72,6 +72,9 @@
             </nav>
             <div style="margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 1.5px; padding-left: 10px;">PROTOCOL</div>
             <nav style="margin-bottom: auto;">
+                <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
+                    <i class="fa-solid fa-circle-question"></i> How it Works
+                </a>
                 <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('architecture').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-sitemap"></i> Architecture
                 </a>
@@ -181,6 +184,28 @@
             </div>
             <!-- DOCS TAB -->
             <div id="tab-docs" class="tab-content hidden">
+                <!-- How it Works -->
+                <div id="how-it-works" style="margin-bottom: 4rem;">
+                    <h2 style="font-size: 2rem; margin-bottom: 1.5rem; font-weight: 600;">How it Works</h2>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
+                            <div style="width: 40px; height: 40px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">1</div>
+                            <h4 style="margin-bottom: 0.5rem;">Connect</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Link your Midnight-compatible wallet (Lace/Nightly) to establish a secure session.</p>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
+                            <div style="width: 40px; height: 40px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">2</div>
+                            <h4 style="margin-bottom: 0.5rem;">Generate</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Generate a Zero-Knowledge proof locally in your browser. Your data never leaves your device.</p>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
+                            <div style="width: 40px; height: 40px; background: var(--text-primary); color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">3</div>
+                            <h4 style="margin-bottom: 0.5rem;">Verify</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">The 128-byte proof is anchored to the ledger for instant, permissionless verification.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Architecture -->
                 <div id="architecture" style="margin-bottom: 4rem;">
                     <h2 style="font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">System Architecture</h2>
