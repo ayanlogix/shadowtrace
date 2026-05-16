@@ -380,6 +380,7 @@ window.addEventListener('DOMContentLoaded', () => {
     flatpickr("#dynamic-input", {
         dateFormat: "Y-m-d",
         disableMobile: "true",
-        animate: true
+        animate: true,
+        monthSelectorType: "dropdown"
     });
 });
