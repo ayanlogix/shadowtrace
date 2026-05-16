@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowTrace | Documentation</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Docs Sidebar -->
+        <aside class="sidebar" style="width: 280px;">
+            <div class="logo" style="display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="window.location.href='index.html'">
+                <img src="logo.png" alt="S" style="width: 28px; height: 28px; border-radius: 6px;"> ShadowTrace
+            </div>
+            <div style="margin-top: 1rem; margin-bottom: 0.8rem; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 1.5px; padding-left: 10px;">RESOURCES</div>
+            <nav style="flex: 1;">
+                <a href="#architecture" class="nav-item">
+                    <i class="fa-solid fa-sitemap"></i> Architecture
+                </a>
+                <a href="#security" class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i> Security Audits
+                </a>
+                <a href="#sdk" class="nav-item">
+                    <i class="fa-solid fa-book"></i> SDK Reference
+                </a>
+            </nav>
+            <a href="index.html" class="btn-primary" style="text-decoration: none; text-align: center; margin-top: auto; justify-content: center;">Launch App <i class="fa-solid fa-arrow-right"></i></a>
+        </aside>
+
+        <!-- Content -->
+        <main class="dashboard" style="max-width: 800px; margin: 0 auto; line-height: 1.8; padding-top: 4rem;">
+            <!-- ARCHITECTURE SECTION -->
+            <div id="architecture" style="margin-bottom: 6rem;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 600; letter-spacing: -0.03em;">System Architecture</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">ShadowTrace leverages the Midnight Network's Dual-State model to enforce zero-trust identity verification.</p>
+                <div class="grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                    <div class="card" style="background: var(--bg); margin: 0; padding: 1.5rem;">
+                        <h3 style="color: var(--accent); font-size: 1.2rem;"><i class="fa-solid fa-microchip"></i> The Private State</h3>
+                        <p style="color: var(--text-secondary);">All sensitive user data (DOB, Financials) is processed entirely client-side inside the browser memory. The data is parsed through our Compact ZK-circuits to generate a proof and is immediately purged from RAM. It never touches a centralized server.</p>
+                    </div>
+                    <div class="card" style="background: var(--bg); margin: 0; padding: 1.5rem;">
+                        <h3 style="color: var(--success); font-size: 1.2rem;"><i class="fa-solid fa-link"></i> The Public State</h3>
+                        <p style="color: var(--text-secondary);">Only the resulting 128-byte zk-SNARK cryptographic hash is broadcasted to the Midnight Ledger. The public network validators verify the mathematical proof, not the raw data.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECURITY SECTION -->
+            <div id="security" style="margin-bottom: 6rem;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 600; letter-spacing: -0.03em;">Security Audits</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Trust is earned through cryptographic certainty, not promises.</p>
+                <div class="card" style="border-color: rgba(0, 230, 118, 0.3); background: rgba(0, 230, 118, 0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0; font-size: 1.2rem;"><i class="fa-solid fa-check-circle" style="color: var(--success);"></i> CertiK Smart Contract Audit</h3>
+                        <span class="status-pill" style="border-color: var(--success); color: var(--success); background: transparent;">PASSED (Mock)</span>
+                    </div>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary);">The ShadowTrace Compact circuits were theoretically audited for logic flaws, constraint completeness, and memory leaks. The ZK-circuits enforce strict mathematical boundaries on user data.</p>
+                </div>
+            </div>
+
+            <!-- SDK SECTION -->
+            <div id="sdk" style="margin-bottom: 6rem;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 600; letter-spacing: -0.03em;">SDK Reference</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Integrate ShadowTrace ZK-Identity into your own Web3 DApp in just 3 lines of code.</p>
+                <div class="terminal" style="height: auto; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                    <div class="terminal-header" style="background: #111;">
+                        <span><i class="fa-brands fa-npm"></i> Terminal</span><span>TypeScript</span>
+                    </div>
+                    <div class="terminal-body" style="padding: 24px; background: #000; font-size: 0.9rem;">
+                        <span style="color: #ff79c6;">import</span> { <span style="color: #8be9fd;">ShadowTraceProver</span> } <span style="color: #ff79c6;">from</span> <span style="color: #f1fa8c;">'@shadowtrace/sdk'</span>;<br><br>
+                        <span style="color: #6272a4;">// 1. Initialize Prover with User Wallet</span><br>
+                        <span style="color: #ff79c6;">const</span> <span style="color: #8be9fd;">prover</span> = <span style="color: #ff79c6;">new</span> <span style="color: #50fa7b;">ShadowTraceProver</span>(walletConnector);<br><br>
+                        <span style="color: #6272a4;">// 2. Request ZK Proof for Age >= 18</span><br>
+                        <span style="color: #ff79c6;">const</span> <span style="color: #8be9fd;">proof</span> = <span style="color: #ff79c6;">await</span> prover.<span style="color: #50fa7b;">verifyConstraint</span>(<span style="color: #f1fa8c;">'AGE_OVER_18'</span>);<br><br>
+                        <span style="color: #6272a4;">// 3. Submit proof to on-chain smart contract</span><br>
+                        console.<span style="color: #50fa7b;">log</span>(<span style="color: #f1fa8c;">"Proof Hash:"</span>, proof.hash);
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Smooth scrolling for sidebar navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
