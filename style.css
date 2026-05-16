@@ -162,6 +162,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
     cursor: pointer !important;
 }
 .flatpickr-current-month .flatpickr-monthDropdown-months:hover { background: rgba(255,255,255,0.05) !important; }
+.flatpickr-weekdays { background: transparent !important; }
+span.flatpickr-weekday { background: transparent !important; color: var(--text-secondary) !important; }
+.flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { opacity: 0.3 !important; }
 
 /* --- TERMINAL --- */
 .terminal { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; height: 350px; display: flex; flex-direction: column; overflow: hidden; }
