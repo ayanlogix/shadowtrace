@@ -375,4 +375,11 @@ window.addEventListener('DOMContentLoaded', () => {
         startBlockTicker();
         typeToConsole(`Session restored. Welcome back.`);
     }
+
+    // Initialize Flatpickr
+    flatpickr("#dynamic-input", {
+        dateFormat: "Y-m-d",
+        disableMobile: "true",
+        animate: true
+    });
 });
