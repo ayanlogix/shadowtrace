@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowTrace | v16</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+
+    <!-- PHASE 1: LOGIN -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-content" id="login-main">
+            <h1>ShadowTrace.</h1>
+            <p>Zero-knowledge identity anchored to Midnight. No compromise.</p>
+            <button id="login-btn" class="btn-primary" style="padding: 16px 32px; font-size: 1rem;">
+                Connect Wallet <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- WALLET MODAL -->
+        <div id="wallet-modal" class="wallet-modal hidden">
+            <h3 style="margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 500;">Select Provider</h3>
+            <div class="wallet-option" onclick="startBootSequence('Lace')">
+                <span style="flex: 1; font-weight: 500; color: var(--text-primary);">Lace Wallet</span>
+                <span style="font-size: 0.7rem; color: #000; background: var(--text-primary); padding: 2px 6px; border-radius: 4px;">RECOMMENDED</span>
+            </div>
+            <div class="wallet-option" onclick="startBootSequence('Nightly')">
+                <span style="flex: 1; font-weight: 500; color: var(--text-primary);">Nightly</span>
+            </div>
+            <div class="wallet-option" onclick="startBootSequence('Midnight')">
+                <span style="flex: 1; font-weight: 500; color: var(--text-primary);">Midnight Core</span>
+            </div>
+            <button onclick="closeWalletModal()" style="width: 100%; margin-top: 1rem; padding: 12px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- BOOT SEQUENCE -->
+    <div id="boot-sequence" class="boot-sequence hidden">
+        <div id="boot-text" style="font-size: 0.9rem;">INITIALIZING_RUNTIME...</div>
+        <div class="boot-progress-bar">
+            <div id="boot-progress" class="boot-progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- PHASE 2: DASHBOARD -->
+    <div id="app-container" class="app-container hidden">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-key"></i> ShadowTrace
+            </div>
+            <nav style="flex: 1;">
+                <a href="#" class="nav-item active" onclick="switchTab('verify')">
+                    <i class="fa-solid fa-fingerprint"></i> Verify
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('history')">
+                    <i class="fa-solid fa-database"></i> Ledger
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('network')">
+                    <i class="fa-solid fa-server"></i> Network
+                </a>
+            </nav>
+            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                <div style="margin-bottom: 8px;">BLOCK: <span id="block-height" style="color: var(--text-primary);">8,492,105</span></div>
+                <div id="connected-wallet-text">LACE: 0x8F2...9A1</div>
+            </div>
+            <button onclick="disconnectWallet()" style="background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.3); color: #ff4444; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans); font-size: 0.8rem; transition: 0.2s;" onmouseover="this.style.background='rgba(255, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(255, 68, 68, 0.1)'">
+                <i class="fa-solid fa-power-off"></i> Disconnect
+            </button>
+        </aside>
+
+        <main class="dashboard">
+            <header class="header">
+                <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">
+                    OVERVIEW / <span id="current-tab-name" style="color: var(--text-primary);">VERIFY</span>
+                </div>
+                <div class="status-pill">
+                    <div class="status-indicator"></div> TESTNET_SYNCED
+                </div>
+            </header>
+
+            <div id="tab-verify" class="tab-content active">
+                <div class="grid">
+                    <div class="card">
+                        <h3>Construct ZK Proof</h3>
+                        <div class="input-group" style="margin-bottom: 1.5rem;">
+                            <label style="display: flex; justify-content: space-between; align-items: center;">
+                                Selective Disclosure Type
+                                <span style="font-size: 0.65rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-secondary);">ZKP CIRCUIT</span>
+                            </label>
+                            <select id="proof-type" style="width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem; outline: none; margin-bottom: 1rem; cursor: pointer;">
+                                <option value="age">Age Verification ( >= 18 )</option>
+                                <option value="finance">Financial Solvency ( Balance > $10k )</option>
+                                <option value="citizenship">Citizenship Attestation</option>
+                            </select>
+
+                            <label id="dynamic-input-label">Date of Birth</label>
+                            <input type="date" id="dynamic-input">
+                        </div>
+                        <button id="generate-proof" class="btn-primary" style="width: 100%;">
+                            <i class="fa-solid fa-microchip"></i> Generate Proof
+                        </button>
+                    </div>
+
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <span>MN_KERNEL_V17</span>
+                            <span style="color: var(--success);">IDLE</span>
+                        </div>
+                        <div class="terminal-body" id="console">
+                            <div>System ready.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEDGER TAB -->
+            <div id="tab-history" class="tab-content hidden">
+                <div class="card">
+                    <h3>Ledger Events</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Manage your active zero-knowledge proofs anchored to the network.</p>
+                </div>
+            </div>
+
+            <!-- NETWORK TAB -->
+            <div id="tab-network" class="tab-content hidden">
+                <div class="grid">
+                    <div class="card">
+                        <h3>Midnight Testnet</h3>
+                        <div style="margin-top: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border); padding-bottom: 8px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Active Validators</span>
+                                <span id="active-validators" style="font-family: var(--font-mono);">124</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed var(--border); padding-bottom: 8px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Network Latency</span>
+                                <span id="network-latency" style="font-family: var(--font-mono); color: var(--success);">42ms</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Compact Version</span>
+                                <span style="font-family: var(--font-mono);">v0.12.4</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 1px dashed var(--border-highlight); background: transparent;">
+                        <i id="network-icon" class="fa-solid fa-chart-network" style="font-size: 2rem; color: var(--success); margin-bottom: 1rem;"></i>
+                        <h4 id="network-status-title" style="font-weight: 500; margin-bottom: 0.5rem;">Node Sync Optimal</h4>
+                        <p id="network-status-desc" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Your local Light Node is fully synchronized with the Midnight P2P network.</p>
+                        <button id="run-diagnostics-btn" onclick="runNetworkDiagnostics()" class="btn-secondary" style="font-size: 0.8rem; padding: 8px 16px;">
+                            <i class="fa-solid fa-rotate"></i> Run Diagnostics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="results-card" class="results-card">
+        <i class="fa-regular fa-circle-check" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 1.5rem;"></i>
+        <h2 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Proof Anchored</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">Securely anchored to the Midnight Ledger.</p>
+        
+        <div class="hash-box">
+            <div class="hash-label">TRANSACTION HASH</div>
+            <div class="hash-value" id="proof-hash">ZKP_STABLE_0X812_9A4B_7F21_C3D9</div>
+            <button class="copy-btn" onclick="copyHash()">
+                <i class="fa-regular fa-copy" id="copy-icon"></i>
+            </button>
+        </div>
+        
+        <button onclick="resetUI()" class="btn-secondary" style="width: 100%;">Acknowledge</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
