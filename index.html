@@ -118,11 +118,18 @@
                                 Selective Disclosure Type
                                 <span style="font-size: 0.65rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--text-secondary);">ZKP CIRCUIT</span>
                             </label>
-                            <select id="proof-type" style="width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 14px; border-radius: 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.9rem; outline: none; margin-bottom: 1rem; cursor: pointer;">
-                                <option value="age">Age Verification ( >= 18 )</option>
-                                <option value="finance">Financial Solvency ( Balance > $10k )</option>
-                                <option value="citizenship">Citizenship Attestation</option>
-                            </select>
+                            <div class="custom-select" id="disclosure-select">
+                                <div class="select-trigger" onclick="toggleSelect()">
+                                    <span id="selected-disclosure-text">Age Verification ( >= 18 )</span>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <div class="select-options hidden" id="select-options">
+                                    <div class="option active" onclick="selectOption(this, 'age', 'Age Verification ( >= 18 )')">Age Verification ( >= 18 )</div>
+                                    <div class="option" onclick="selectOption(this, 'finance', 'Financial Solvency ( Balance > $10k )')">Financial Solvency ( Balance > $10k )</div>
+                                    <div class="option" onclick="selectOption(this, 'citizenship', 'Citizenship Attestation')">Citizenship Attestation</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="proof-type" value="age">
 
                             <label id="dynamic-input-label">Date of Birth</label>
                             <input type="date" id="dynamic-input">

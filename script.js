@@ -149,6 +149,53 @@ function runNetworkDiagnostics() {
     }, 2500);
 }
 
+// --- CUSTOM SELECT LOGIC ---
+function toggleSelect() {
+    const options = document.getElementById('select-options');
+    options.classList.toggle('hidden');
+}
+
+function selectOption(element, value, text) {
+    // Update Hidden Input
+    document.getElementById('proof-type').value = value;
+    
+    // Update Trigger Text
+    document.getElementById('selected-disclosure-text').innerText = text;
+    
+    // Update Active Class
+    document.querySelectorAll('.option').forEach(opt => opt.classList.remove('active'));
+    element.classList.add('active');
+    
+    // Close Dropdown
+    document.getElementById('select-options').classList.add('hidden');
+    
+    // Handle dynamic labels (Age vs Finance)
+    const label = document.getElementById('dynamic-input-label');
+    const input = document.getElementById('dynamic-input');
+    
+    if (value === 'age') {
+        label.innerText = 'Date of Birth';
+        input.type = 'date';
+    } else if (value === 'finance') {
+        label.innerText = 'Target Balance Threshold';
+        input.type = 'text';
+        input.placeholder = '$10,000.00';
+    } else {
+        label.innerText = 'Identity Document Number';
+        input.type = 'text';
+        input.placeholder = 'e.g. PASS-9210-XX';
+    }
+}
+
+// Close select when clicking outside
+window.addEventListener('click', (e) => {
+    const select = document.getElementById('disclosure-select');
+    const options = document.getElementById('select-options');
+    if (select && !select.contains(e.target)) {
+        options.classList.add('hidden');
+    }
+});
+
 // --- TAB SWITCHING ---
 function switchTab(tabId, element = null) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
