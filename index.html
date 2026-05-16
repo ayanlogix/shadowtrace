@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShadowTrace | ZK Identity Protocol</title>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script type="module" src="/script.js" defer></script>
 </head>
 <body>
     <div id="overlay" class="overlay"></div>
@@ -14,6 +18,9 @@
     <!-- PHASE 1: LOGIN -->
     <div id="login-screen" class="login-screen">
         <div class="login-content" id="login-main">
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2rem;">
+                <img src="/logo.png" alt="S" style="width: 80px; height: 80px; border-radius: 16px; box-shadow: 0 0 50px rgba(138, 43, 226, 0.5); border: 1px solid rgba(255,255,255,0.1);">
+            </div>
             <h1>ShadowTrace.</h1>
             <p>Zero-knowledge identity anchored to Midnight. No compromise.</p>
             <button id="login-btn" class="btn-primary" style="padding: 16px 32px; font-size: 1rem;">
@@ -50,7 +57,7 @@
     <div id="app-container" class="app-container hidden">
         <aside class="sidebar">
             <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-                <img src="logo.png" alt="S" style="width: 28px; height: 28px; border-radius: 6px;"> ShadowTrace
+                <img src="/logo.png" alt="S" style="width: 28px; height: 28px; border-radius: 6px;"> ShadowTrace
             </div>
             <nav style="flex: 1;">
                 <a href="#" class="nav-item active" onclick="switchTab('verify', this)">
