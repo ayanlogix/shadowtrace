@@ -1,9 +1,9 @@
 # 🛡️ ShadowTrace
 **Privacy-Preserving Identity Protocol built on the Midnight Network.**
 
-![ShadowTrace Protocol](https://img.shields.io/badge/Network-Midnight_Testnet-success)
-![UI](https://img.shields.io/badge/UI-Vercel_Aesthetic-black)
-![Architecture](https://img.shields.io/badge/Architecture-Zero_Knowledge-blue)
+[![ShadowTrace Protocol](https://img.shields.io/badge/Network-Midnight_Testnet-success)](https://midnight.network/)
+[![UI](https://img.shields.io/badge/UI-Vercel_Aesthetic-black)](https://github.com/ayanlogix/shadowtrace)
+[![Architecture](https://img.shields.io/badge/Architecture-Zero_Knowledge-blue)](https://midnight.network/)
 
 ShadowTrace is a zero-knowledge identity protocol that eliminates the trade-off between privacy and usability. It allows users to prove credentials (Age, Financial Solvency, Citizenship) on-chain without ever exposing the underlying sensitive data.
 
