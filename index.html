@@ -75,31 +75,39 @@
             </nav>
             <div style="margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 1.5px; padding-left: 10px;">PROTOCOL</div>
             <nav style="margin-bottom: auto;">
-                <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
+                <a href="#" class="nav-item" onclick="switchTab('how', this); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-circle-question"></i> How it Works
                 </a>
-                <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('architecture').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
+                <a href="#" class="nav-item" onclick="switchTab('architecture', this); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-sitemap"></i> Architecture
                 </a>
-                <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('security').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
+                <a href="#" class="nav-item" onclick="switchTab('security', this); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-shield-halved"></i> Security Audits
                 </a>
-                <a href="#" class="nav-item" onclick="switchTab('docs', this); setTimeout(() => document.getElementById('sdk').scrollIntoView({behavior: 'smooth'}), 100); return false;" style="margin-bottom: 5px;">
+                <a href="#" class="nav-item" onclick="switchTab('sdk', this); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-book"></i> Documentation
                 </a>
-                <a href="https://github.com/ayanlogix/shadowtrace" target="_blank" style="text-decoration: none;">
-                    <div class="nav-item" style="margin-bottom: 5px;">
+                <a href="https://github.com/ayanlogix/shadowtrace" target="_blank" style="text-decoration: none; margin-bottom: 2rem; display: block;">
+                    <div class="nav-item">
                         <i class="fa-brands fa-github"></i> Open Source
                     </div>
                 </a>
+
+                <div style="height: 1px; background: var(--border); margin: 0 10px 2rem 10px; opacity: 0.5;"></div>
+
+                <div style="padding: 0 12px; margin-bottom: 2rem;">
+                    <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 12px; letter-spacing: 0.5px;">
+                        BLOCK: <span id="block-height" style="color: var(--text-primary); margin-left: 8px;">8,492,105</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.5px;">
+                        WALLET: <span id="connected-wallet-text" style="color: var(--text-primary); margin-left: 8px;">NIGHTLY: 0x8F2...9A1</span>
+                    </div>
+                </div>
+
+                <button onclick="disconnectWallet()" class="btn-secondary" style="width: calc(100% - 20px); margin: 0 10px; padding: 12px; color: #ff4444; border-color: rgba(255,68,68,0.2); background: rgba(255,68,68,0.02); display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600;">
+                    <i class="fa-solid fa-power-off"></i> Disconnect
+                </button>
             </nav>
-            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                <div style="margin-bottom: 8px;">BLOCK: <span id="block-height" style="color: var(--text-primary);">8,492,105</span></div>
-                <div id="connected-wallet-text">LACE: 0x8F2...9A1</div>
-            </div>
-            <button onclick="disconnectWallet()" style="background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.3); color: #ff4444; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-sans); font-size: 0.8rem; transition: 0.2s;" onmouseover="this.style.background='rgba(255, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(255, 68, 68, 0.1)'">
-                <i class="fa-solid fa-power-off"></i> Disconnect
-            </button>
         </aside>
 
         <main class="dashboard">
@@ -192,75 +200,94 @@
                     </div>
                 </div>
             </div>
-            <!-- DOCS TAB -->
-            <div id="tab-docs" class="tab-content hidden">
-                <!-- How it Works -->
-                <div id="how-it-works" style="margin-bottom: 4rem;">
-                    <h2 style="font-size: 2rem; margin-bottom: 1.5rem; font-weight: 600;">How it Works</h2>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
-                            <div style="width: 40px; height: 40px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">1</div>
-                            <h4 style="margin-bottom: 0.5rem;">Connect</h4>
-                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Link your Midnight-compatible wallet (Lace/Nightly) to establish a secure session.</p>
+            <!-- HOW IT WORKS TAB -->
+            <div id="tab-how" class="tab-content hidden">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px;">How ShadowTrace Works</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 3rem; max-width: 900px;">
+                    ShadowTrace is a zero-knowledge identity protocol built to solve the "Privacy Paradox": how to prove who you are without revealing your data. By leveraging the Midnight Network's private state, we allow users to generate mathematical proofs of their attributes that can be verified on-chain with 100% certainty.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 4rem;">
+                    <div style="padding: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px;">
+                        <div style="width: 50px; height: 50px; background: var(--accent); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-weight: 800; font-size: 1.4rem;">1</div>
+                        <h3 style="margin-bottom: 1rem;">Secure Connect</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7;">Establish a cryptographically secure session by linking your Midnight-compatible wallet. This creates a temporary session key that manages the local ZK-environment.</p>
+                    </div>
+                    <div style="padding: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px;">
+                        <div style="width: 50px; height: 50px; background: var(--success); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-weight: 800; font-size: 1.4rem;">2</div>
+                        <h3 style="margin-bottom: 1rem;">Witness Gen</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7;">Your raw identity data (PII) is processed through a WASM-compiled Compact circuit directly in your browser's RAM. The raw data is instantly purged after use.</p>
+                    </div>
+                    <div style="padding: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 16px;">
+                        <div style="width: 50px; height: 50px; background: var(--text-primary); color: black; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-weight: 800; font-size: 1.4rem;">3</div>
+                        <h3 style="margin-bottom: 1rem;">Anchoring</h3>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7;">The final 128-byte proof is broadcasted to the Midnight Ledger. The network verifies the proof against the global state, anchoring your claim permanently.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ARCHITECTURE TAB -->
+            <div id="tab-architecture" class="tab-content hidden">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px;">Protocol Architecture</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 3rem; max-width: 900px;">
+                    The ShadowTrace architecture utilizes a hybrid proof-of-work and zero-knowledge model anchored to the Midnight sidechain. Our architecture ensures that 100% of PII stays on the client device.
+                </p>
+                <div style="background: #0a0a0a; border: 1px solid var(--border); border-radius: 16px; padding: 3rem; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 10px; right: 10px; font-size: 0.7rem; color: var(--accent); font-family: var(--font-mono);">INTERNAL_DIAGRAM_V2</div>
+                    <div style="display: flex; justify-content: space-around; align-items: center; min-height: 200px;">
+                        <div style="text-align: center; width: 150px;">
+                            <i class="fa-solid fa-user-shield" style="font-size: 3rem; margin-bottom: 1.5rem; color: var(--accent);"></i>
+                            <div style="font-weight: 600;">Client Prover</div>
                         </div>
-                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
-                            <div style="width: 40px; height: 40px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">2</div>
-                            <h4 style="margin-bottom: 0.5rem;">Generate</h4>
-                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Generate a Zero-Knowledge proof locally in your browser. Your data never leaves your device.</p>
+                        <i class="fa-solid fa-arrow-right-long" style="font-size: 1.5rem; color: var(--border);"></i>
+                        <div style="text-align: center; width: 150px;">
+                            <i class="fa-solid fa-server" style="font-size: 3rem; margin-bottom: 1.5rem; color: var(--success);"></i>
+                            <div style="font-weight: 600;">Compact VM</div>
                         </div>
-                        <div style="text-align: center; padding: 1.5rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;">
-                            <div style="width: 40px; height: 40px; background: var(--text-primary); color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-weight: 700;">3</div>
-                            <h4 style="margin-bottom: 0.5rem;">Verify</h4>
-                            <p style="font-size: 0.85rem; color: var(--text-secondary);">The 128-byte proof is anchored to the ledger for instant, permissionless verification.</p>
+                        <i class="fa-solid fa-arrow-right-long" style="font-size: 1.5rem; color: var(--border);"></i>
+                        <div style="text-align: center; width: 150px;">
+                            <i class="fa-solid fa-cubes" style="font-size: 3rem; margin-bottom: 1.5rem; color: var(--text-primary);"></i>
+                            <div style="font-weight: 600;">Ledger</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Architecture -->
-                <div id="architecture" style="margin-bottom: 4rem;">
-                    <h2 style="font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">System Architecture</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">ShadowTrace leverages the Midnight Network's Dual-State model to enforce zero-trust identity verification.</p>
-                    <div class="grid" style="grid-template-columns: 1fr; gap: 1rem;">
-                        <div class="card" style="margin: 0; padding: 1.5rem;">
-                            <h3 style="color: var(--accent); font-size: 1.1rem;"><i class="fa-solid fa-microchip"></i> The Private State</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.95rem;">All sensitive user data is processed entirely client-side inside the browser memory. The data is parsed through our Compact ZK-circuits to generate a proof and is immediately purged from RAM.</p>
-                        </div>
-                        <div class="card" style="margin: 0; padding: 1.5rem;">
-                            <h3 style="color: var(--success); font-size: 1.1rem;"><i class="fa-solid fa-link"></i> The Public State</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.95rem;">Only the resulting 128-byte zk-SNARK cryptographic hash is broadcasted to the Midnight Ledger. The public network validates the math, not the data.</p>
-                        </div>
+            <!-- SECURITY TAB -->
+            <div id="tab-security" class="tab-content hidden">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px;">Security & Audits</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 3rem; max-width: 900px;">
+                    Trust is earned through cryptographic certainty, not promises. ShadowTrace is built on the most secure ZK-primitives available in the Midnight ecosystem.
+                </p>
+                <div class="card" style="padding: 2.5rem; border: 1px solid rgba(0, 230, 118, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.4rem;"><i class="fa-solid fa-shield-check"></i> CertiK Smart Contract Audit</h3>
+                        <span class="status-pill" style="background: rgba(0, 230, 118, 0.1); color: var(--success); border-color: var(--success);">PASSED (MOCK)</span>
                     </div>
+                    <p style="color: var(--text-secondary); line-height: 1.8;">
+                        The ShadowTrace Compact circuits were theoretically audited for logic flaws, constraint completeness, and memory leaks. The ZK-circuits enforce strict mathematical boundaries on user data, ensuring that even under a compromised browser environment, the raw PII remains encrypted within the WASM enclave.
+                    </p>
                 </div>
+            </div>
 
-                <!-- Security -->
-                <div id="security" style="margin-bottom: 4rem;">
-                    <h2 style="font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">Security Audits</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Trust is earned through cryptographic certainty, not promises.</p>
-                    <div class="card" style="border-color: rgba(0, 230, 118, 0.3); background: rgba(0, 230, 118, 0.05);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <h3 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-check-circle" style="color: var(--success);"></i> CertiK Smart Contract Audit</h3>
-                            <span class="status-pill" style="border-color: var(--success); color: var(--success); background: transparent;">PASSED (Mock)</span>
-                        </div>
-                        <p style="font-size: 0.95rem; color: var(--text-secondary);">The ShadowTrace Compact circuits were theoretically audited for logic flaws, constraint completeness, and memory leaks. The ZK-circuits enforce strict mathematical boundaries on user data.</p>
+            <!-- SDK TAB -->
+            <div id="tab-sdk" class="tab-content hidden">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px;">Developer SDK</h2>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.8; margin-bottom: 3rem; max-width: 900px;">
+                    Integrate ShadowTrace ZK-Identity into your own Web3 DApp in just 3 lines of code.
+                </p>
+                <div class="terminal" style="height: auto;">
+                    <div class="terminal-header">
+                        <span>TypeScript — v1.4.2</span>
+                        <span style="cursor: pointer;" onclick="copySDKCode()"><i class="fa-solid fa-copy" id="sdk-copy-icon"></i> Copy</span>
                     </div>
-                </div>
-
-                <!-- SDK Reference -->
-                <div id="sdk" style="margin-bottom: 4rem;">
-                    <h2 style="font-size: 2rem; margin-bottom: 1rem; font-weight: 600;">SDK Reference</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Integrate ShadowTrace ZK-Identity into your own Web3 DApp in just 3 lines of code.</p>
-                    <div class="terminal" style="height: auto;">
-                        <div class="terminal-header">
-                            <span><i class="fa-brands fa-npm"></i> Terminal</span><span>TypeScript</span>
-                        </div>
-                        <div class="terminal-body" style="padding: 24px; font-size: 0.9rem;">
-                            <span style="color: #ff79c6;">import</span> { <span style="color: #8be9fd;">ShadowTraceProver</span> } <span style="color: #ff79c6;">from</span> <span style="color: #f1fa8c;">'@shadowtrace/sdk'</span>;<br><br>
-                            <span style="color: #6272a4;">// Initialize Prover with User Wallet</span><br>
-                            <span style="color: #ff79c6;">const</span> <span style="color: #8be9fd;">prover</span> = <span style="color: #ff79c6;">new</span> <span style="color: #50fa7b;">ShadowTraceProver</span>(walletConnector);<br><br>
-                            <span style="color: #6272a4;">// Request ZK Proof for Age >= 18</span><br>
-                            <span style="color: #ff79c6;">const</span> <span style="color: #8be9fd;">proof</span> = <span style="color: #ff79c6;">await</span> prover.<span style="color: #50fa7b;">verifyConstraint</span>(<span style="color: #f1fa8c;">'AGE_OVER_18'</span>);<br><br>
-                            console.<span style="color: #50fa7b;">log</span>(proof.hash);
-                        </div>
+                    <div id="sdk-code-block" class="terminal-body" style="padding: 2.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; line-height: 1.7;">
+                        <span style="color: #6a9955;">// Import the ShadowTrace Prover</span><br>
+                        <span style="color: #569cd6;">import</span> { ShadowTraceProver } <span style="color: #569cd6;">from</span> <span style="color: #ce9178;">'@shadowtrace/sdk'</span>;<br><br>
+                        <span style="color: #6a9955;">// Initialize Prover with User Wallet</span><br>
+                        <span style="color: #569cd6;">const</span> prover = <span style="color: #569cd6;">new</span> <span style="color: #4ec9b0;">ShadowTraceProver</span>(walletConnector);<br><br>
+                        <span style="color: #6a9955;">// Request ZK Proof for Age >= 18</span><br>
+                        <span style="color: #569cd6;">const</span> proof = <span style="color: #569cd6;">await</span> prover.<span style="color: #dcdcaa;">verifyConstraint</span>(<span style="color: #ce9178;">'AGE_OVER_18'</span>);<br><br>
+                        <span style="color: #50fa7b;">console</span>.<span style="color: #dcdcaa;">log</span>(proof.hash);
                     </div>
                 </div>
             </div>

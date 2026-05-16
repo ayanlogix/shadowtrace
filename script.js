@@ -239,10 +239,12 @@ function generateRandomHash() {
 generateProofBtn.addEventListener('click', () => {
     if (!dynamicInput.value) {
         typeToConsole(`Error: ${dynamicInputLabel.innerText} is required.`);
+        showToast(`Please enter your ${dynamicInputLabel.innerText.toLowerCase()}`, 'error');
         return;
     }
 
-    const proofTypeStr = proofTypeSelect.options[proofTypeSelect.selectedIndex].text;
+    const proofTypeStr = document.getElementById('selected-disclosure-text').innerText;
+    const proofTypeValue = document.getElementById('proof-type').value;
     
     // Generate dynamic hash
     lastGeneratedHash = generateRandomHash();
@@ -250,7 +252,7 @@ generateProofBtn.addEventListener('click', () => {
 
     generateProofBtn.disabled = true;
     generateProofBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
-    typeToConsole(`Loading Compact Circuit: [${proofTypeSelect.value.toUpperCase()}]`);
+    typeToConsole(`Loading Compact Circuit: [${proofTypeValue.toUpperCase()}]`);
     
     setTimeout(() => {
         typeToConsole("Generating witness data securely...");
@@ -277,7 +279,7 @@ function resetUI() {
     typeToConsole("Proof anchored to ledger.");
     
     // Dynamically add to Ledger
-    const proofTypeStr = proofTypeSelect.options[proofTypeSelect.selectedIndex].text;
+    const proofTypeStr = document.getElementById('selected-disclosure-text').innerText;
     addLedgerItem(proofTypeStr, lastGeneratedHash);
     
     showToast('New proof added to Ledger', 'success');
@@ -306,6 +308,24 @@ function addLedgerItem(title, hash) {
 }
 
 // --- COPY TO CLIPBOARD ---
+function copySDKCode() {
+    const codeText = document.getElementById('sdk-code-block').innerText;
+    const copyIcon = document.getElementById('sdk-copy-icon');
+    
+    navigator.clipboard.writeText(codeText).then(() => {
+        copyIcon.className = 'fa-solid fa-check';
+        copyIcon.style.color = 'var(--success)';
+        showToast('SDK implementation copied to clipboard', 'success');
+        
+        setTimeout(() => {
+            copyIcon.className = 'fa-solid fa-copy';
+            copyIcon.style.color = '';
+        }, 2000);
+    }).catch(err => {
+        showToast('Failed to copy text', 'error');
+    });
+}
+
 function copyHash() {
     const hashText = document.getElementById('proof-hash').innerText;
     const copyIcon = document.getElementById('copy-icon');
@@ -376,11 +396,36 @@ window.addEventListener('DOMContentLoaded', () => {
         typeToConsole(`Session restored. Welcome back.`);
     }
 
-    // Initialize Flatpickr
+    // Initialize Flatpickr with Custom Month Grid Logic
     flatpickr("#dynamic-input", {
         dateFormat: "Y-m-d",
         disableMobile: "true",
         animate: true,
-        monthSelectorType: "dropdown"
+        monthSelectorType: "static", // Removes the ugly native select
+        onReady: function(selectedDates, dateStr, instance) {
+            const monthElement = instance.monthElements[0];
+            monthElement.style.cursor = 'pointer';
+            monthElement.title = "Click to select month";
+            
+            monthElement.addEventListener('click', () => {
+                const picker = document.createElement('div');
+                picker.className = 'custom-month-grid';
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                
+                months.forEach((m, i) => {
+                    const mBtn = document.createElement('div');
+                    mBtn.className = 'month-item';
+                    if (instance.currentMonth === i) mBtn.classList.add('active');
+                    mBtn.innerText = m;
+                    mBtn.onclick = () => {
+                        instance.changeMonth(i);
+                        picker.remove();
+                    };
+                    picker.appendChild(mBtn);
+                });
+                
+                instance.calendarContainer.appendChild(picker);
+            });
+        }
     });
 });
