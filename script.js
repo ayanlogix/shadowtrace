@@ -428,4 +428,52 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+    
+    // Restore Custom Wallets
+    restoreCustomWallets();
 });
+
+// --- DYNAMIC WALLET ADDITION ---
+function showAddWalletInput() {
+    document.getElementById('add-wallet-trigger').classList.add('hidden');
+    document.getElementById('add-wallet-input-container').classList.remove('hidden');
+    document.getElementById('new-wallet-name').focus();
+}
+
+function cancelAddWallet() {
+    document.getElementById('add-wallet-trigger').classList.remove('hidden');
+    document.getElementById('add-wallet-input-container').classList.add('hidden');
+    document.getElementById('new-wallet-name').value = '';
+}
+
+function confirmAddWallet() {
+    const name = document.getElementById('new-wallet-name').value.trim();
+    if (!name) return;
+
+    saveCustomWallet(name);
+    addWalletToUI(name);
+    cancelAddWallet();
+    showToast(`${name} added to providers`, 'success');
+}
+
+function addWalletToUI(name) {
+    const container = document.getElementById('custom-wallets-container');
+    const div = document.createElement('div');
+    div.className = 'wallet-option';
+    div.onclick = () => startBootSequence(name);
+    div.innerHTML = `<span style="flex: 1; font-weight: 500; color: var(--text-primary);">${name}</span>`;
+    container.appendChild(div);
+}
+
+function saveCustomWallet(name) {
+    let wallets = JSON.parse(localStorage.getItem('shadowtrace_custom_wallets') || '[]');
+    if (!wallets.includes(name)) {
+        wallets.push(name);
+        localStorage.setItem('shadowtrace_custom_wallets', JSON.stringify(wallets));
+    }
+}
+
+function restoreCustomWallets() {
+    let wallets = JSON.parse(localStorage.getItem('shadowtrace_custom_wallets') || '[]');
+    wallets.forEach(name => addWalletToUI(name));
+}

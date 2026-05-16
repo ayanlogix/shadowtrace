@@ -22,7 +22,7 @@
     <div id="login-screen" class="login-screen">
         <div class="login-content" id="login-main">
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2rem;">
-                <img src="/logo.png" alt="S" style="width: 80px; height: 80px; border-radius: 16px; box-shadow: 0 0 50px rgba(138, 43, 226, 0.5); border: 1px solid rgba(255,255,255,0.1);">
+                <img src="/logo.png" alt="S" style="width: 80px; height: 80px; mix-blend-mode: screen; filter: drop-shadow(0 0 25px rgba(138, 43, 226, 0.9)); -webkit-mask-image: radial-gradient(circle, black 50%, transparent 80%); mask-image: radial-gradient(circle, black 50%, transparent 80%);">
             </div>
             <h1>ShadowTrace.</h1>
             <p>Zero-knowledge identity anchored to Midnight. No compromise.</p>
@@ -44,7 +44,22 @@
             <div class="wallet-option" onclick="startBootSequence('Midnight')">
                 <span style="flex: 1; font-weight: 500; color: var(--text-primary);">Midnight Core</span>
             </div>
-            <button onclick="closeWalletModal()" style="width: 100%; margin-top: 1rem; padding: 12px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem;">Cancel</button>
+            
+            <div id="custom-wallets-container"></div>
+
+            <div id="add-wallet-trigger" class="wallet-option" style="border: 1px dashed rgba(255,255,255,0.2); opacity: 0.5; justify-content: center;" onclick="showAddWalletInput()">
+                <span style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fa-solid fa-plus"></i> Add Other Wallet</span>
+            </div>
+
+            <div id="add-wallet-input-container" class="hidden" style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px;">
+                <input type="text" id="new-wallet-name" placeholder="Wallet Name..." style="width: 100%; background: transparent; border: none; color: white; font-size: 0.9rem; outline: none; margin-bottom: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="confirmAddWallet()" style="flex: 1; padding: 6px; background: var(--accent); border: none; border-radius: 4px; color: white; font-size: 0.75rem; cursor: pointer;">Add</button>
+                    <button onclick="cancelAddWallet()" style="padding: 6px 12px; background: rgba(255,255,255,0.1); border: none; border-radius: 4px; color: white; font-size: 0.75rem; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+
+            <button onclick="closeWalletModal()" style="width: 100%; margin-top: 0.5rem; padding: 12px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.85rem;">Cancel</button>
         </div>
     </div>
 
@@ -60,7 +75,7 @@
     <div id="app-container" class="app-container hidden">
         <aside class="sidebar">
             <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-                <img src="/logo.png" alt="S" style="width: 28px; height: 28px; border-radius: 6px;"> ShadowTrace
+                <img src="/logo.png" alt="S" style="width: 28px; height: 28px; mix-blend-mode: screen; filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.6)); -webkit-mask-image: radial-gradient(circle, black 50%, transparent 90%); mask-image: radial-gradient(circle, black 50%, transparent 90%);"> ShadowTrace
             </div>
             <nav style="flex: 1;">
                 <a href="#" class="nav-item active" onclick="switchTab('verify', this)">
@@ -82,7 +97,7 @@
                     <i class="fa-solid fa-sitemap"></i> Architecture
                 </a>
                 <a href="#" class="nav-item" onclick="switchTab('security', this); return false;" style="margin-bottom: 5px;">
-                    <i class="fa-solid fa-shield-halved"></i> Security Audits
+                    <i class="fa-solid fa-shield-check"></i> Security Audits
                 </a>
                 <a href="#" class="nav-item" onclick="switchTab('sdk', this); return false;" style="margin-bottom: 5px;">
                     <i class="fa-solid fa-book"></i> Documentation
