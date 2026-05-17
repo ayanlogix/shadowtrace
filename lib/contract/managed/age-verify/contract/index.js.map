@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../../../",
+  "sources": ["src/age-verify.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAWA;;;;;;;;;;;;;;;;;;;MAIA,AAAA,WA0BC;;;;;cAzBC,SAAkB;cAClB,aAAqB;cACrB,cAAqB;cACrB,YAAmB;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;yCAHnB,SAAkB,+BAClB,aAAqB,+BACrB,cAAqB,+BACrB,YAAmB;;;;;;;;;6CAHnB,SAAkB;6CAClB,aAAqB;6CACrB,cAAqB;6CACrB,YAAmB;;;OAsBpB;;;;GA5BA;EAFD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAPA;;;;;;;;;yEAAsC;IACtC;;;;;;;;;yEAAuC;IAOrC;;;;;;;;;yEAAa;;;;;;;GACd;EAND,AAAA,YAA8B;;0DAA9B,SAA8B;;;;;;;;;;;;;;GAAA;EAC9B,AAAA,aAA8B;;0DAA9B,UAA8B;;;;;;;;;;;;;;GAAA;EAC9B,AAAA,WAA4B;;0DAA5B,QAA4B;;;;;;;;;;;;;;GAAA;EAM5B,AAAA,cA0BC;;iBAzBC,SAAkB;iBAClB,aAAqB;iBACrB,cAAqB;iBACrB,YAAmB;;UAEb,MAAkB;UAClB,OAAoB;UACpB,KAAgB;4BAEf,OAAK,UAAS,OAAK;;4BACnB,KAAG,UAAS,KAAG;4BACf,cAAY,UAAS,cAAY;;4BACjC,YAAU,UAAS,YAAU;;4BAC7B,aAAW,IAAI,MAAI;;UAEpB,WAA8B,4BAAlB,aAAW,IAAG,MAAI;;yBAAlB,aAAW,GAAG,MAAI;UAC9B,aAA4B,GAAd,WAAS;UACvB,cAA8B,iBAAf,WAAS;UACxB,qBAA0C,GAApB,cAAY,GAAG,OAAK;UAC1C,mBAA8D,iBAA1C,cAAY,EAAI,OAAK;;gCAAI,YAAU,IAAI,KAAG;4BAE7D,aAAW;;4BAAK,cAAY;;6BAAK,qBAAmB,IAAI,mBAAiB;;IAEhF;;;;;;;2HAAyB,SAAO;;yEAAnB;UACb,KAAc;IAAd;;;;;;;;;;6FAAA,KAAc;;;;wEAAA;;GACf;;;;;;;;;;;;;;;;;;;;;;;;IArCD;qCAAA;;;;;;;;;;;0GAAsC;KAAA;IACtC;qCAAA;;;;;;;;;;;0GAAuC;KAAA;;;;;;;;;;;;;;"
+}

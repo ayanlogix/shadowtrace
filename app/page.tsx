@@ -8,9 +8,10 @@ import {
   ONE_AM_EXTENSION_URL,
   type OneAmWalletSession,
 } from "@/lib/wallet";
+import { verifyAgeOver18 } from "@/lib/age-verify";
 
 type TabId = "verify" | "history" | "network" | "how" | "architecture" | "security" | "sdk";
-type ProofType = "age" | "finance" | "citizenship";
+type ProofType = "age";
 type ToastType = "info" | "success" | "error";
 
 type Toast = {
@@ -33,20 +34,6 @@ const disclosureOptions: Array<{ value: ProofType; label: string; inputLabel: st
     inputLabel: "Date of Birth",
     inputType: "date",
     placeholder: "",
-  },
-  {
-    value: "finance",
-    label: "Financial Solvency ( Balance > $10k )",
-    inputLabel: "Target Balance Threshold",
-    inputType: "text",
-    placeholder: "$10,000.00",
-  },
-  {
-    value: "citizenship",
-    label: "Citizenship Attestation",
-    inputLabel: "Identity Document Number",
-    inputType: "text",
-    placeholder: "e.g. PASS-9210-XX",
   },
 ];
 
@@ -74,19 +61,8 @@ const proof = await prover.verifyConstraint('AGE_OVER_18');
 
 console.log(proof.hash);`;
 
-function generateRandomHash() {
-  const chars = "0123456789ABCDEF";
-  let hash = "ZKP_";
-
-  for (let index = 0; index < 24; index += 1) {
-    if (index > 0 && index % 4 === 0) hash += "_";
-    hash += chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return hash;
-}
-
 export default function Home() {
+  const [isMounted, setIsMounted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [walletModalOpen, setWalletModalOpen] = useState(false);
   const [booting, setBooting] = useState(false);
@@ -106,10 +82,11 @@ export default function Home() {
   const [latency, setLatency] = useState(42);
   const [diagnosticsRunning, setDiagnosticsRunning] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
-  const [proofHash, setProofHash] = useState("ZKP_STABLE_0X812_9A4B_7F21_C3D9");
+  const [proofHash, setProofHash] = useState("");
   const [generating, setGenerating] = useState(false);
   const [ledgerItems, setLedgerItems] = useState<LedgerItem[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [ageContractAddress, setAgeContractAddress] = useState("");
   const consoleRef = useRef<HTMLDivElement>(null);
 
   const selectedDisclosure = useMemo(
@@ -123,6 +100,7 @@ export default function Home() {
 
   useEffect(() => {
     localStorage.removeItem("shadowtrace_wallet");
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
@@ -230,34 +208,44 @@ export default function Home() {
     }, 2500);
   };
 
-  const generateProof = () => {
+  const generateProof = async () => {
     if (!dynamicInput) {
       addConsoleLine(`Error: ${selectedDisclosure.inputLabel} is required.`);
       showToast(`Please enter your ${selectedDisclosure.inputLabel.toLowerCase()}`, "error");
       return;
     }
 
-    const nextHash = generateRandomHash();
-    setProofHash(nextHash);
-    setGenerating(true);
-    addConsoleLine(`Loading Compact Circuit: [${proofType.toUpperCase()}]`);
+    if (!walletSession) {
+      showToast("Connect 1AM wallet before generating a proof.", "error");
+      return;
+    }
 
-    window.setTimeout(() => {
-      addConsoleLine("Generating witness data securely...");
-      window.setTimeout(() => {
-        addConsoleLine(`Constructing zero-knowledge proof for: ${selectedDisclosure.label}`);
-        window.setTimeout(() => {
-          addConsoleLine("Proof generated successfully.");
-          window.setTimeout(() => setResultsOpen(true), 600);
-        }, 1200);
-      }, 1200);
-    }, 800);
+    setGenerating(true);
+    addConsoleLine("Loading Compact circuit: [AGE_VERIFY]");
+    addConsoleLine("DOB loaded into local private state. It will not be sent as a circuit argument.");
+
+    try {
+      addConsoleLine("Proving age >= 18 with 1AM sponsored transaction flow...");
+      const proof = await verifyAgeOver18(walletSession, dynamicInput);
+
+      setProofHash(proof.txId);
+      setAgeContractAddress(proof.contractAddress);
+      addConsoleLine(`Proof submitted to Midnight ledger. Contract: ${proof.contractAddress}`);
+      addConsoleLine(`Claim id anchored: ${proof.claimId}`);
+      addConsoleLine("DOB private state discarded locally after proof submission.");
+      setResultsOpen(true);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Age proof failed.";
+      addConsoleLine(`Proof rejected: ${message}`);
+      showToast(message.includes("age is under 18") ? "Age proof failed: user is under 18." : message, "error");
+      setGenerating(false);
+    }
   };
 
   const acknowledgeProof = () => {
     setResultsOpen(false);
     setGenerating(false);
-    addConsoleLine("Proof anchored to ledger.");
+    addConsoleLine("Proof acknowledged.");
     setLedgerItems((current) => [
       ...current,
       {
@@ -289,6 +277,10 @@ export default function Home() {
       showToast("Failed to copy text", "error");
     }
   };
+
+  if (!isMounted) {
+    return <div style={{ background: '#050505', minHeight: '100vh' }} />;
+  }
 
   return (
     <>
@@ -395,6 +387,11 @@ export default function Home() {
                 <div>
                   DUST: <span>{formatAddress(walletSession?.dustAddress)}</span>
                 </div>
+                {ageContractAddress && (
+                  <div>
+                    CONTRACT: <span>{formatAddress(ageContractAddress)}</span>
+                  </div>
+                )}
               </div>
 
               <button className="btn-secondary disconnect-button" onClick={disconnectWallet}>

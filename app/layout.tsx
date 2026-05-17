@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ShadowTrace | ZK Identity Protocol",
   description: "Zero-knowledge identity anchored to Midnight.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -12,21 +15,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/logo.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          rel="stylesheet"
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              const observer = new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                  if (mutation.type === 'attributes' && mutation.attributeName === 'bis_skin_checked') {
+                    mutation.target.removeAttribute('bis_skin_checked');
+                  }
+                  for (const node of mutation.addedNodes) {
+                    if (node.nodeType === 1) {
+                      if (node.hasAttribute('bis_skin_checked')) node.removeAttribute('bis_skin_checked');
+                      for (const el of node.querySelectorAll('[bis_skin_checked]')) {
+                        el.removeAttribute('bis_skin_checked');
+                      }
+                    }
+                  }
+                }
+              });
+              observer.observe(document.documentElement, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                attributeFilter: ['bis_skin_checked']
+              });
+            `
+          }}
         />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

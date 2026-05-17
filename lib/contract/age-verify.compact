@@ -1,0 +1,42 @@
+pragma language_version >= 0.20;
+
+import CompactStandardLibrary;
+
+export ledger verifiedProofs: Counter;
+export ledger latestClaimId: Bytes<32>;
+
+witness birthYear(): Uint<16>;
+witness birthMonth(): Uint<8>;
+witness birthDay(): Uint<8>;
+
+constructor() {
+  latestClaimId = pad(32, "shadowtrace:init");
+}
+
+export circuit verifyAdult(
+  claimId: Bytes<32>,
+  currentYear: Uint<16>,
+  currentMonth: Uint<8>,
+  currentDay: Uint<8>,
+): [] {
+  const year = birthYear();
+  const month = birthMonth();
+  const day = birthDay();
+
+  assert(month >= 1 && month <= 12, "invalid birth month");
+  assert(day >= 1 && day <= 31, "invalid birth day");
+  assert(currentMonth >= 1 && currentMonth <= 12, "invalid current month");
+  assert(currentDay >= 1 && currentDay <= 31, "invalid current day");
+  assert(currentYear >= year, "birth year is in the future");
+
+  const ageByYear = currentYear - year;
+  const olderThan18 = ageByYear > 18;
+  const is18ThisYear = ageByYear == 18;
+  const birthdayMonthPassed = currentMonth > month;
+  const birthdayDayPassed = currentMonth == month && currentDay >= day;
+
+  assert(olderThan18 || (is18ThisYear && (birthdayMonthPassed || birthdayDayPassed)), "age is under 18");
+
+  latestClaimId = disclose(claimId);
+  verifiedProofs.increment(1);
+}

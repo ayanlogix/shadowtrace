@@ -1,14 +1,14 @@
 {
-  "name": "@app/counter-contract",
+  "name": "@app/shadowtrace-contract",
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "compact": "compact compile src/counter.compact src/managed/counter",
+    "compact": "node ../scripts/compact-compile.mjs",
     "build": "npm run compact && npm run sync:assets",
     "build:contract": "npm run compact && npm run sync:assets",
-    "sync:assets": "cp -Rf ./src/managed/counter/keys ../public/zk/counter/ && cp -Rf ./src/managed/counter/zkir ../public/zk/counter/"
+    "sync:assets": "node ../scripts/sync-zk.mjs"
   },
   "dependencies": {
     "@midnight-ntwrk/compact-runtime": "0.16.0",
