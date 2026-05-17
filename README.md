@@ -1,44 +1,44 @@
-# 🛡️ ShadowTrace
-**Privacy-Preserving Identity Protocol built on the Midnight Network.**
+# ShadowTrace
 
-[![ShadowTrace Protocol](https://img.shields.io/badge/Network-Midnight_Testnet-success)](https://midnight.network/)
-[![UI](https://img.shields.io/badge/UI-Vercel_Aesthetic-black)](https://github.com/ayanlogix/shadowtrace)
-[![Architecture](https://img.shields.io/badge/Architecture-Zero_Knowledge-blue)](https://midnight.network/)
+**Privacy-preserving identity protocol built on the Midnight Network.**
 
-ShadowTrace is a zero-knowledge identity protocol that eliminates the trade-off between privacy and usability. It allows users to prove credentials (Age, Financial Solvency, Citizenship) on-chain without ever exposing the underlying sensitive data.
+ShadowTrace is a zero-knowledge identity interface for proving credentials such as age, financial solvency, or citizenship without exposing the underlying sensitive data.
 
-## 🌟 Core Features
-*   **Selective Disclosure:** Users choose exactly what to prove without revealing raw data.
-*   **Dual-State Model:** Private state remains strictly local to the user's device, while only the 128-byte zk-SNARK proof is anchored to the Midnight public ledger.
-*   **Compact Smart Contracts:** Built using Midnight's TypeScript-based Compact language for native privacy circuits.
-*   **Zero-Trust Session Management:** Built-in wallet connection/disconnection logic ensuring session security.
-*   **Dynamic Network Polling:** Live simulated connections to the Midnight P2P network to monitor Validator status and latency.
+## Core Features
 
-## 🛠️ Architecture
+- **Selective Disclosure:** Users choose exactly what to prove without revealing raw data.
+- **Dual-State Model:** Private state remains local to the user's device while only the proof is anchored to the ledger.
+- **Compact Smart Contracts:** Built around Midnight Compact circuits.
+- **Zero-Trust Session Management:** Wallet connection, disconnection, and restored sessions.
+- **Dynamic Network Polling:** Simulated Midnight network status, validator count, and latency.
 
-*   **Frontend:** Vanilla JS / CSS (No heavy frameworks, highly optimized).
-*   **Smart Contract:** `contract/index.compact` (Contains the `prove_age_18` circuit).
-*   **Web3 Client:** `src/web3-client.ts` (Handles Lace/Nightly wallet connection and Midnight Node Prover execution).
+## Architecture
 
-## 🚀 For Developers (Running Locally)
+- **Frontend:** Next.js App Router with a client-side React dashboard in `app/page.tsx`.
+- **Styling:** Global CSS in `app/globals.css`.
+- **Assets:** Static assets in `public/`.
+- **Smart Contract:** `contract/index.compact`.
 
-To run the full Web3 integration, you must have the Midnight SDKs installed.
+## Running Locally
 
-1. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
+Install dependencies:
 
-2. **Compile the Compact Circuit:**
-   Use the Midnight Compiler to turn `index.compact` into the required `ZKIR` files.
+```bash
+npm install
+```
 
-3. **Start the Bundler:**
-   ```bash
-   npm run dev
-   ```
+Start the development server:
 
-## 🤝 Project Handoff
-Please refer to `ANKIT_HANDOFF.md` for specific instructions on wiring the compiled Compact circuits into the frontend UI logic. 
+```bash
+npm run dev
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
 
 ---
-*Built for the Midnight Ecosystem Hackathon.*
+
+Built for the Midnight ecosystem hackathon.
