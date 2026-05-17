@@ -2,6 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  connectOneAmWallet,
+  formatAddress,
+  ONE_AM_EXTENSION_URL,
+  type OneAmWalletSession,
+} from "@/lib/wallet";
 
 type TabId = "verify" | "history" | "network" | "how" | "architecture" | "security" | "sdk";
 type ProofType = "age" | "finance" | "citizenship";
@@ -87,6 +93,9 @@ export default function Home() {
   const [bootText, setBootText] = useState("INITIALIZING_RUNTIME...");
   const [bootProgress, setBootProgress] = useState(0);
   const [walletName] = useState("1AM Wallet");
+  const [walletSession, setWalletSession] = useState<OneAmWalletSession | null>(null);
+  const [walletMissing, setWalletMissing] = useState(false);
+  const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState<TabId>("verify");
   const [proofType, setProofType] = useState<ProofType>("age");
   const [selectOpen, setSelectOpen] = useState(false);
@@ -108,17 +117,13 @@ export default function Home() {
     [proofType],
   );
 
-  const connectedWalletLabel = `1AM: 0x8F2...9A1`;
+  const connectedWalletLabel = walletSession
+    ? `1AM: ${formatAddress(walletSession.unshieldedAddress)}`
+    : "1AM: Not connected";
 
   useEffect(() => {
-    const savedWallet = localStorage.getItem("shadowtrace_wallet");
-
-    if (savedWallet) {
-      localStorage.setItem("shadowtrace_wallet", walletName);
-      setIsConnected(true);
-      setConsoleLines(["> Session restored. Welcome back."]);
-    }
-  }, [walletName]);
+    localStorage.removeItem("shadowtrace_wallet");
+  }, []);
 
   useEffect(() => {
     consoleRef.current?.scrollTo({ top: consoleRef.current.scrollHeight });
@@ -151,34 +156,58 @@ export default function Home() {
     }, 3000);
   };
 
-  const startBootSequence = () => {
+  const startBootSequence = async () => {
     setWalletModalOpen(false);
     setBooting(true);
+    setWalletMissing(false);
+    setAuthError("");
     setBootText("INITIALIZING_RUNTIME...");
     setBootProgress(0);
-    localStorage.setItem("shadowtrace_wallet", walletName);
 
-    window.setTimeout(() => {
-      setBootText("AUTHENTICATING_SIGNATURE...");
+    try {
+      setBootText("CHECKING_1AM_EXTENSION...");
+      setBootProgress(20);
+
+      const sessionPromise = connectOneAmWallet("preprod");
+
       setBootProgress(40);
-    }, 400);
-    window.setTimeout(() => {
-      setBootText("SYNCING_STATE...");
+      setBootText("CONNECTING_PREPROD...");
+
+      const session = await sessionPromise;
+
       setBootProgress(80);
-    }, 900);
-    window.setTimeout(() => {
-      setBootText("ACCESS_GRANTED");
+      setBootText("VERIFYING_WALLET_SIGNATURE...");
+
+      if (!session.authSignature) {
+        throw new Error("Wallet verification failed: 1AM did not return a signature.");
+      }
+
+      setWalletSession(session);
       setBootProgress(100);
-    }, 1300);
-    window.setTimeout(() => {
+      setBootText("ACCESS_GRANTED");
+
+      window.setTimeout(() => {
+        setBooting(false);
+        setIsConnected(true);
+        setConsoleLines([
+          "> 1AM wallet authenticated on preprod.",
+          `> Unshielded address: ${session.unshieldedAddress}`,
+          `> Shielded address: ${session.shieldedAddress ?? "Unavailable"}`,
+        ]);
+      }, 450);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to connect 1AM wallet.";
       setBooting(false);
-      setIsConnected(true);
-      setConsoleLines(["> System initialized. Wallet connected."]);
-    }, 1600);
+      setWalletModalOpen(true);
+      setAuthError(message);
+      setWalletMissing(message.toLowerCase().includes("not installed"));
+      showToast(message, "error");
+    }
   };
 
   const disconnectWallet = () => {
     localStorage.removeItem("shadowtrace_wallet");
+    setWalletSession(null);
     showToast("Wallet disconnected securely.", "info");
 
     window.setTimeout(() => {
@@ -275,7 +304,7 @@ export default function Home() {
               <h1>ShadowTrace.</h1>
               <p>Zero-knowledge identity anchored to Midnight. No compromise.</p>
               <button className="btn-primary login-button" onClick={() => setWalletModalOpen(true)}>
-                Connect Wallet <i className="fa-solid fa-arrow-right" />
+                Connect Midnight Wallet <i className="fa-solid fa-arrow-right" />
               </button>
             </div>
           )}
@@ -287,6 +316,16 @@ export default function Home() {
                 <span>1AM Wallet</span>
                 <strong>DUST-FREE</strong>
               </button>
+              {authError && (
+                <div className="wallet-auth-message">
+                  <p>{authError}</p>
+                  {walletMissing && (
+                    <a href={ONE_AM_EXTENSION_URL} target="_blank" rel="noreferrer">
+                      Install 1AM Wallet
+                    </a>
+                  )}
+                </div>
+              )}
 
               <button className="cancel-wallet" onClick={() => setWalletModalOpen(false)}>
                 Cancel
@@ -349,6 +388,12 @@ export default function Home() {
                 </div>
                 <div>
                   WALLET: <span>{connectedWalletLabel}</span>
+                </div>
+                <div>
+                  NETWORK: <span>{walletSession?.config.networkId ?? "preprod"}</span>
+                </div>
+                <div>
+                  DUST: <span>{formatAddress(walletSession?.dustAddress)}</span>
                 </div>
               </div>
 

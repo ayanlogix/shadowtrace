@@ -210,6 +210,32 @@ button {
   padding: 2px 6px;
 }
 
+.wallet-auth-message {
+  background: rgba(255, 68, 68, 0.04);
+  border: 1px solid rgba(255, 68, 68, 0.18);
+  border-radius: 8px;
+  margin: 0.5rem 0 0.75rem;
+  padding: 12px;
+}
+
+.wallet-auth-message p {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.wallet-auth-message a {
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.wallet-auth-message a:hover {
+  text-decoration: underline;
+}
+
 .cancel-wallet {
   background: transparent;
   color: var(--text-secondary);
@@ -341,7 +367,7 @@ button {
   padding: 0 12px;
 }
 
-.sidebar-stats div:first-child {
+.sidebar-stats div:not(:last-child) {
   margin-bottom: 12px;
 }
 
